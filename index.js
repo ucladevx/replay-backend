@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
+require('dotenv').config();
 
 // set up express server.
 const app = express();
@@ -27,20 +28,18 @@ app.listen(PORT, () => {
     console.log(`Listening on Port ${PORT}`);
 });
 
-// const connectToDB = async () => {
-//     try {
-//         await mongoose.connect(process.env.MONGO_URI, {
-//             useNewUrlParser: true,
-//             useUnifiedTopology: true,
-//             useCreateIndex: true,
-//             useFindAndModify: false,
-//         });
-//         console.log("Connected to database");
-//     } catch (err) {
-//         console.log(err);
-//         console.log("Could not connect to database. Exiting...");
-//         process.exit(1);
-//     }
-// };
+const connectToDB = async () => {
+    try {
+        await mongoose.connect(process.env.MONGO_URI, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+        });
+        console.log("Connected to database");
+    } catch (err) {
+        console.log(err);
+        console.log("Could not connect to database. Exiting...");
+        process.exit(1);
+    }
+};
 
-// connectToDB();
+connectToDB();
