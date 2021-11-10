@@ -24,6 +24,39 @@ app.get('/health', (req, res) => {
     })
 })
 
+// geocoord test endpoint.
+const User = require('./models/user')
+const Location = require('./models/location')
+app.get('/db-test', async (req, res) => {
+
+    let testLocation, testUser
+    try {
+        testLocation = new Location({
+            type: 'Point',
+            coordinates: [
+                "102",
+                "203"
+            ]
+        })
+
+        await testLocation.save()
+
+        testUser = new User({
+            username: "sanya",
+            currentLocation: testLocation._id
+        })
+
+        await testUser.save();
+    } catch (err) {
+        res.status(400).json({
+            error: err.message
+        })
+    }
+
+    res.status(200).json({ testLocation, testUser })
+
+})
+
 app.listen(PORT, () => {
     console.log(`Listening on Port ${PORT}`);
 });
