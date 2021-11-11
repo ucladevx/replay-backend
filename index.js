@@ -26,10 +26,11 @@ app.get('/health', (req, res) => {
 
 // geocoord test endpoint.
 const User = require('./models/user')
-const Location = require('./models/location')
+const Location = require('./models/location');
+const Song = require("./models/song");
 app.get('/db-test', async (req, res) => {
 
-    let testLocation, testUser
+    let testLocation, testUser, testSong
     try {
         testLocation = new Location({
             type: 'Point',
@@ -47,6 +48,14 @@ app.get('/db-test', async (req, res) => {
         })
 
         await testUser.save();
+
+        testSong = new Song({
+            name: "nathan",
+            artist: "Drake"
+        })
+
+        await testSong.save()
+        
     } catch (err) {
         res.status(400).json({
             error: err.message
