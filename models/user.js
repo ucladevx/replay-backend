@@ -1,13 +1,14 @@
 const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
-    username: String, // required.
+    username: { type: String, unique: true }, // required.
+    email: { type: String, unique: true }, // required.
     password: String, // required.
     spotifyUsername: String,
-    spotifyPassword: String,
+    // spotifyPassword: String,
     currentLocation: String, // locationSchema id.
-    songsPlayed: [String], // id's of Song objects.
-    topArtists: [String], // names?
+    songsPlayed: [String], // spotify track id's.
+    topArtists: [String], // names / spotify id's?
     promptAnswers: [],
     dp: String
 })

@@ -8,6 +8,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
+app.set("jwt_secret", process.env.JWT_SECRET);
 
 const PORT = process.env.PORT || 9000;
 
@@ -55,7 +56,7 @@ app.get('/db-test', async (req, res) => {
         })
 
         await testSong.save()
-        
+
     } catch (err) {
         res.status(400).json({
             error: err.message
