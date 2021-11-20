@@ -14,9 +14,11 @@ const PORT = process.env.PORT || 9000;
 
 //  list all routes here, such as profileRoutes, messageRoutes, etc.
 const authRoutes = require("./routes/auth")
+const locationRoutes = require("./routes/location")
 
 // route them accordingly eg. app.use("/profile", profileRoutes)
 app.use("/auth", authRoutes);
+app.use("/location", locationRoutes)
 
 // basic health endpoint to quickly check if the server is up and running.
 app.get('/health', (req, res) => {
@@ -27,44 +29,40 @@ app.get('/health', (req, res) => {
 
 // geocoord test endpoint.
 const User = require('./models/user')
-const Location = require('./models/location');
-const Song = require("./models/song");
-app.get('/db-test', async (req, res) => {
+const { Location } = require('./models/location');
+app.get('/populate-coords', async (req, res) => {
 
-    let testLocation, testUser, testSong
+    let testLocation, testUser
     try {
-        testLocation = new Location({
-            type: 'Point',
-            coordinates: [
-                "102",
-                "203"
-            ]
-        })
-
-        await testLocation.save()
+        // testLocation = new Location({
+        //     type: 'Point',
+        //     coordinates: [
+        //         "10",
+        //         "20"
+        //     ]
+        // })
+        // await testLocation.save()
 
         testUser = new User({
-            username: "sanya",
-            currentLocation: testLocation._id
+            username: 'g',
+            email: 'g',
+            currentLocation: {
+                type: 'Point',
+                coordinates: [
+                    "30.1003",
+                    "40.1003"
+                ]
+            }
         })
-
         await testUser.save();
 
-        testSong = new Song({
-            name: "nathan",
-            artist: "Drake"
-        })
-
-        await testSong.save()
-
     } catch (err) {
-        res.status(400).json({
-            error: err.message
+        return res.status(400).json({
+            error: err.message + "from index"
         })
     }
 
-    res.status(200).json({ testLocation, testUser })
-
+    return res.status(200).json(testUser)
 })
 
 app.listen(PORT, () => {
