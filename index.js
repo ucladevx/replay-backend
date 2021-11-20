@@ -27,7 +27,7 @@ app.get('/health', (req, res) => {
     })
 })
 
-// geocoord test endpoint.
+// temporary geocoord helper endpoint.
 const User = require('./models/user')
 const { Location } = require('./models/location');
 app.get('/populate-coords', async (req, res) => {
