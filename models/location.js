@@ -7,7 +7,7 @@ const locationSchema = new mongoose.Schema({
         required: true
     },
     coordinates: {
-        type: [Number], // [longitude, latitude] in that order.
+        type: [Number], // [latitude, longitude] in that order.
         required: true
     }
 })
