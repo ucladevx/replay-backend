@@ -12,16 +12,15 @@ exports.update = async (req, res) => {
             type: [latitude, longitude],
         });
         await newLocation.save();
-        
-        return res.status(200).json({
-            message: "Location Successfully Updated.",
-            newLocation,
-        });
     } catch (err) {
-        return res.status(400).json({
-            message: err.message,
-        });
+            return res.status(400).json({
+                message: err.message,
+            });   
     }    
+    return res.status(200).json({
+        message: "Location Successfully Updated.",
+        newLocation,
+    }) 
 };
 
 const User = require("../models/user")
