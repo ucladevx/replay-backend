@@ -1,11 +1,10 @@
 const express = require("express");
 const router = express.Router();
 
-const { nearby } = require("../helpers/location");
+const { update, nearby } = require("../helpers/location");
+
+router.post("/update", update);
 
 router.get("/nearby", nearby);
-
-// TODO: for Nathan.
-// router.post("/update", signIn); 
 
 module.exports = router;
