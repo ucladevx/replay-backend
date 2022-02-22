@@ -1,6 +1,9 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/user")
+const { URLSearchParams } = require("url");
+const querystring = require("querystring");
+const request = require('request')
 
 exports.signUp = async (req, res) => {
 
@@ -103,3 +106,135 @@ exports.signIn = async (req, res) => {
         })
     }
 }
+
+exports.spotify = async (req, res) => {
+
+    const client_id = process.env.SPOTIFY_CLIENT_ID
+    const response_type = "code"
+    const show_dialog = true // change to false later.
+    const redirect_uri = process.env.SPOTIFY_REDIRECT_URI
+
+    let state = process.env.SPOTIFY_STATE
+    let scope = 'user-read-private user-read-email';
+
+    const auth_str = 'https://accounts.spotify.com/authorize?' +
+        new URLSearchParams({
+            response_type,
+            client_id,
+            scope,
+            redirect_uri,
+            state,
+            show_dialog,
+        }).toString()
+    console.log(auth_str)
+
+    try {
+        res.redirect(auth_str);
+    } catch (err) {
+        res.status(400).json({
+            message: err.message
+        })
+    }
+
+
+}
+
+exports.callback = async (req, res) => {
+    console.log('Callback successful')
+
+    const redirect_uri = process.env.SPOTIFY_REDIRECT_URI
+    const client_id = process.env.SPOTIFY_CLIENT_ID
+    const client_secret = process.env.SPOTIFY_CLIENT_SECRET
+
+    var code = req.query.code || null;
+    var state = req.query.state || null;
+
+    if (state === null) {
+        res.redirect('/#' +
+            querystring.stringify({
+                error: 'state_mismatch'
+            }));
+    } else {
+        var authOptions = {
+            url: 'https://accounts.spotify.com/api/token',
+            form: {
+                code: code,
+                redirect_uri: redirect_uri,
+                grant_type: 'authorization_code'
+            },
+            headers: {
+                'Authorization': 'Basic ' + (new Buffer(client_id + ':' + client_secret).toString('base64'))
+            },
+            json: true
+        };
+    }
+
+    request.post(authOptions, function (error, response, body) {
+        if (!error && response.statusCode === 200) {
+
+            var access_token = body.access_token,
+                refresh_token = body.refresh_token;
+
+            console.log(body)
+
+            var options = {
+                url: 'https://api.spotify.com/v1/me',
+                headers: { 'Authorization': 'Bearer ' + access_token },
+                json: true
+            };
+
+            // use the access token to access the Spotify Web API
+            request.get(options, function (error, response, body) {
+                console.log(body);
+            });
+
+            // we can also pass the token to the browser to make requests from there
+            res.redirect('/#' +
+                querystring.stringify({
+                    access_token: access_token,
+                    refresh_token: refresh_token
+                }));
+        } else {
+            res.redirect('/#' +
+                querystring.stringify({
+                    error: 'invalid_token'
+                }));
+        }
+    });
+}
+
+exports.refreshToken = async (req, res) => {
+
+    const client_id = process.env.SPOTIFY_CLIENT_ID
+    const client_secret = process.env.SPOTIFY_CLIENT_SECRET
+
+    // requesting access token from refresh token
+    var refresh_token = req.query.refresh_token;
+
+    var authOptions = {
+        url: 'https://accounts.spotify.com/api/token',
+        headers: { 'Authorization': 'Basic ' + (new Buffer(client_id + ':' + client_secret).toString('base64')) },
+        form: {
+            grant_type: 'refresh_token',
+            refresh_token: refresh_token
+        },
+        json: true
+    };
+
+    try {
+        await request.post(authOptions, function (error, response, body) {
+            if (!error && response.statusCode === 200) {
+                var access_token = body.access_token;
+
+                res.status(200).json({
+                    access_token,
+                    message: 'Successful.'
+                })
+            }
+        });
+    } catch (err) {
+        return res.status(400).json({
+            message: err.message
+        })
+    }
+};
