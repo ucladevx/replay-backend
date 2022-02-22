@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { locationSchema } = require('../models/location')
 
 const userSchema = new mongoose.Schema({
     username: { type: String, unique: true }, // required.
