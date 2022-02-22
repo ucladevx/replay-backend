@@ -4,11 +4,10 @@ const userSchema = new mongoose.Schema({
     username: { type: String, unique: true }, // required.
     email: { type: String, unique: true }, // required.
     password: String, // required.
-    spotifyUsername: String,
-    // spotifyPassword: String,
+    sharePlaybackPostQuit: Boolean,
     currentLocation: String, // locationSchema id.
-    songsPlayed: [String], // spotify track id's.
-    topArtists: [String], // names / spotify id's?
+    songsPlayed: [String], // store vs pull from api?
+    topArtists: [String], // store vs pull from api?
     promptAnswers: [],
     dp: String
 })

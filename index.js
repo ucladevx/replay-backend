@@ -14,9 +14,11 @@ const PORT = process.env.PORT || 9000;
 
 //  list all routes here, such as profileRoutes, messageRoutes, etc.
 const authRoutes = require("./routes/auth")
+const spotifyRoutes = require("./routes/spotify")
 
 // route them accordingly eg. app.use("/profile", profileRoutes)
 app.use("/auth", authRoutes);
+app.use("/spotify", spotifyRoutes);
 
 // basic health endpoint to quickly check if the server is up and running.
 app.get('/health', (req, res) => {

@@ -115,7 +115,9 @@ exports.spotify = async (req, res) => {
     const redirect_uri = process.env.SPOTIFY_REDIRECT_URI
 
     let state = process.env.SPOTIFY_STATE
-    let scope = 'user-read-private user-read-email';
+
+    // https://developer.spotify.com/documentation/general/guides/authorization/scopes
+    let scope = 'user-read-playback-state user-read-recently-played user-read-currently-playing user-read-private user-follow-read user-library-read user-read-email playlist-read-collaborative user-top-read';
 
     const auth_str = 'https://accounts.spotify.com/authorize?' +
         new URLSearchParams({
