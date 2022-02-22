@@ -46,8 +46,8 @@ app.get('/populate-coords', async (req, res) => {
         // await testLocation.save()
 
         testUser = new User({
-            username: 'g',
-            email: 'g',
+            username: 'h',
+            email: 'h',
             currentLocation: {
                 type: 'Point',
                 coordinates: [

@@ -6,7 +6,7 @@ const userSchema = new mongoose.Schema({
     email: { type: String, unique: true }, // required.
     password: String, // required.
     sharePlaybackPostQuit: Boolean,
-    currentLocation: String, // locationSchema id.
+    currentLocation: locationSchema,
     songsPlayed: [String], // store vs pull from api?
     topArtists: [String], // store vs pull from api?
     promptAnswers: [],
