@@ -5,13 +5,11 @@ const userSchema = new mongoose.Schema({
     username: { type: String, unique: true }, // required.
     email: { type: String, unique: true }, // required.
     password: String, // required.
-    spotifyUsername: String,
-    // spotifyPassword: String,
-    currentSong: String, // track id for current or most recently played song. this is what's displayed.
+    sharePlaybackPostQuit: Boolean,
     currentLocation: locationSchema,
-    songsPlayed: [String], // spotify track id's, sorted by most-recent first.
-    topArtists: [String], // names / spotify id's?
-    promptAnswers: [], // TODO.
+    songsPlayed: [String], // store vs pull from api?
+    topArtists: [String], // store vs pull from api?
+    promptAnswers: [],
     dp: String
 })
 

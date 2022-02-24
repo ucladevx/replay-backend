@@ -14,11 +14,13 @@ const PORT = process.env.PORT || 9000;
 
 //  list all routes here, such as profileRoutes, messageRoutes, etc.
 const authRoutes = require("./routes/auth")
+const spotifyRoutes = require("./routes/spotify")
 const locationRoutes = require("./routes/location")
 
 // route them accordingly eg. app.use("/profile", profileRoutes)
 app.use("/auth", authRoutes);
-app.use("/location", locationRoutes)
+app.use("/spotify", spotifyRoutes);
+app.use("/location", locationRoutes);
 
 // basic health endpoint to quickly check if the server is up and running.
 app.get('/health', (req, res) => {
@@ -44,8 +46,8 @@ app.get('/populate-coords', async (req, res) => {
         // await testLocation.save()
 
         testUser = new User({
-            username: 'g',
-            email: 'g',
+            username: 'h',
+            email: 'h',
             currentLocation: {
                 type: 'Point',
                 coordinates: [
