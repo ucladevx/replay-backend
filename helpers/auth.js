@@ -8,7 +8,7 @@ const request = require('request')
 exports.signUp = async (req, res) => {
 
     const { username, email, password } = req.body;
-
+    console.log(username);
     if (username === undefined || email === undefined || password === undefined) {
         return res.status(400).json({
             message: "Please provide username, email, and password."
@@ -239,4 +239,32 @@ exports.refreshToken = async (req, res) => {
             message: err.message
         })
     }
+};
+
+exports.deleteAccount = async (req, res) => {
+
+    const { username } = req.body;
+    if (username === undefined) {
+        return res.status(400).json({
+            message: "Please provide username."
+        })
+    }
+
+    User.exists({username: username}, function (err, doc) {
+        if (err) console.log(err);
+        if (!doc) {
+            return res.status(400).json({
+                message: "Account does not exist."
+            })
+        }
+        
+        User.deleteOne({username: username}, function (err) {
+            if (err) console.log(err);
+        });
+
+        console.log("Successful deletion of " + username);
+        return res.status(200).json({
+            message: "Delete account successful."
+        })
+    });
 };
